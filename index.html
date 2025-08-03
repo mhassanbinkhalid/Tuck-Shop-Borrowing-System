@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuck Shop Borrowing System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tuck Shop Borrowing System</h1>
+            <p>Track customer debts and payments</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('add-record')">Add New Record</button>
+            <button class="tab-btn" onclick="showTab('customer-list')">Customer List</button>
+            <button class="tab-btn" onclick="showTab('make-payment')">Make Payment</button>
+        </nav>
+
+        <!-- Add New Record Section -->
+        <div id="add-record" class="tab-content active">
+            <div class="card">
+                <h2>Add New Borrowing Record</h2>
+                <form id="borrowing-form">
+                    <div class="form-group">
+                        <label for="customer-name">Customer Name:</label>
+                        <input type="text" id="customer-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customer-phone">Phone Number:</label>
+                        <input type="tel" id="customer-phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="borrow-date">Date:</label>
+                        <input type="date" id="borrow-date" required>
+                    </div>
+
+                    <div class="goods-section">
+                        <h3>Goods Borrowed</h3>
+                        <div id="goods-list">
+                            <div class="goods-item">
+                                <input type="text" placeholder="Item name" class="item-name" required>
+                                <input type="number" placeholder="Qty" class="item-quantity" min="1" required>
+                                <input type="number" placeholder="Amount" class="item-amount" step="0.01" min="0" required>
+                                <div style="display: flex; justify-content: center; align-items: center;"><button type="button"  class="remove-item" onclick="removeGoodsItem(this)">×</button></div>
+                                
+                            </div>
+                        </div>
+                        <button type="button" id="add-goods-btn" onclick="addGoodsItem()">+ Add Another Item</button>
+                    </div>
+
+                    <div class="total-section">
+                        <strong>Total Amount: Rs <span id="total-amount">0.00</span></strong>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Add Record</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Customer List Section -->
+        <div id="customer-list" class="tab-content">
+            <div class="card">
+                <h2>Customer Records</h2>
+                <div class="search-box">
+                    <input type="text" id="search-customer" placeholder="Search by name or phone...">
+                </div>
+                <div id="customers-container">
+                    <!-- Customer records will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Make Payment Section -->
+        <div id="make-payment" class="tab-content">
+            <div class="card">
+                <h2>Make Payment</h2>
+                <div class="form-group">
+                    <label for="payment-customer">Select Customer:</label>
+                    <select id="payment-customer" onchange="loadCustomerDebt()">
+                        <option value="">-- Select Customer --</option>
+                    </select>
+                </div>
+
+                <div id="payment-details" style="display: none;">
+                    <div class="debt-info">
+                        <h3>Current Debt: Rs <span id="current-debt">0.00</span></h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-amount">Payment Amount:</label>
+                        <input type="number" id="payment-amount" step="0.01" min="0">
+                    </div>
+
+                    <div class="payment-buttons">
+                        <button onclick="makePartialPayment()" class="btn-secondary">Make Partial Payment</button>
+                        <button onclick="clearAllDebt()" class="btn-danger">Clear All Debt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Detail Modal -->
+        <div id="customer-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="modal-body">
+                    <!-- Customer details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
