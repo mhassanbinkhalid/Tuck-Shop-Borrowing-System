@@ -180,7 +180,57 @@ function handleBorrowingForm(e) {
     loadPaymentCustomers();
 }
 
+//Whatsapp button
+function createWhatsAppLink(customer) {
+    // Create message text
+    let message = `Assalam o Alaikum ${customer.name},\n` +
+                  `Aap ne total Rs ${customer.totalDebt.toFixed(2)} ka samaan borrow kiya hai.\n\n` +
+                  `Details:\n`;
+
+    customer.records.forEach((record, i) => {
+        message += `Record ${i + 1} - ${formatDate(record.date)} : Rs ${record.totalAmount.toFixed(2)}\n`;
+        record.goods.forEach((item, idx) => {
+            message += `   ${idx+1}) ${item.name} (Qty: ${item.quantity}) - Rs ${item.amount.toFixed(2)}\n`;
+        });
+        message += '\n';
+    });
+
+    message += `Baraye mehrbani payment kar dein. JazakAllah!`;
+
+    // Encode message for URL
+    return `https://wa.me/${customer.phone}?text=${encodeURIComponent(message)}`;
+}
+
+
+
 // Display customers list
+// function displayCustomers() {
+//     const container = document.getElementById('customers-container');
+    
+//     if (customers.length === 0) {
+//         container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 40px;">No customer records found.</p>';
+//         return;
+//     }
+    
+//     // Sort customers by total debt (highest first)
+//     const sortedCustomers = [...customers].sort((a, b) => b.totalDebt - a.totalDebt);
+    
+//     container.innerHTML = sortedCustomers.map(customer => `
+//         <div class="customer-card" onclick="showCustomerDetails('${customer.id}')">
+//             <div class="customer-info">
+//                 <div class="customer-details">
+//                     <h3>${customer.name}</h3>
+//                     <p>📞 ${customer.phone}</p>
+//                     <p>📋 ${customer.records.length} record(s)</p>
+//                 </div>
+//                 <div class="debt-amount ${customer.totalDebt <= 0 ? 'paid' : ''}">
+//                     Rs ${customer.totalDebt.toFixed(2)}
+//                 </div>
+//             </div>
+//         </div>
+//     `).join('');
+// }
+
 function displayCustomers() {
     const container = document.getElementById('customers-container');
     
@@ -189,12 +239,11 @@ function displayCustomers() {
         return;
     }
     
-    // Sort customers by total debt (highest first)
     const sortedCustomers = [...customers].sort((a, b) => b.totalDebt - a.totalDebt);
     
     container.innerHTML = sortedCustomers.map(customer => `
-        <div class="customer-card" onclick="showCustomerDetails('${customer.id}')">
-            <div class="customer-info">
+        <div class="customer-card">
+            <div class="customer-info" onclick="showCustomerDetails('${customer.id}')">
                 <div class="customer-details">
                     <h3>${customer.name}</h3>
                     <p>📞 ${customer.phone}</p>
@@ -204,9 +253,21 @@ function displayCustomers() {
                     Rs ${customer.totalDebt.toFixed(2)}
                 </div>
             </div>
+            ${customer.totalDebt > 0 ? `
+                <a 
+                    href="${createWhatsAppLink(customer)}" 
+                    class="whatsapp-btn" 
+                    target="_blank"
+                    style="margin-top:8px; display:inline-block; background:#25D366; color:#fff; padding:6px 12px; border-radius:6px; text-decoration:none;"
+                >
+                    WhatsApp
+                </a>
+            ` : ''}
         </div>
     `).join('');
 }
+
+
 
 // Search customers
 function searchCustomers() {
