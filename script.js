@@ -195,7 +195,7 @@ function createWhatsAppLink(customer) {
         message += '\n';
     });
 
-    message += `Baraye mehrbani payment kar dein. JazakAllah!`;
+    message += `Baraye mehrbani payment kar dein jld az jld. JazakAllah! \n Mubasher super store Air Port road Rahim yar khan \n +923067640494`;
 
     // Encode message for URL
     return `https://wa.me/${customer.phone}?text=${encodeURIComponent(message)}`;
